@@ -30,7 +30,6 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 
 class Ctfer:
     """CTF Solver Runtime - Provide AI maximum freedom within safe container boundary"""
-
     def __init__(self, vnc_port, workspace):
         # Sandbox: Ubuntu desktop + Claude Code + Python Executor MCP + Toolset + Security tools
         self.image = "l3yx/sandbox:latest"
@@ -47,7 +46,6 @@ class Ctfer:
         self.ports = {f"{vnc_port}":"5901"}  # VNC for human observation
         self.docker_client = docker.DockerClient()
         self.container = None
-        
         try:
             self.docker_client.images.get(self.image)
         except ImageNotFound:
@@ -58,13 +56,15 @@ class Ctfer:
             ports=self.ports, detach=True, remove=True
         )
 
-    def __del__(self):
-        """Cleanup: Stop container. All artifacts saved to workspace."""
+    def cleanup(self):
         if self.container:
             try:
                 self.container.stop(timeout=5)
             except Exception:
                 pass
+
+    def __del__(self):
+        self.cleanup()
 
 if __name__ == "__main__":
     # Main Entry Point: The 100-line Baby Runtime in Action
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     print("[+] mcp服务已就绪...")
     print(f"[+] 可以连接 vnc://127.0.0.1:{vnc_port} 查看可视化界面, 密码123456")
     print(f"[+] 开始解题, 可以打开 {workspace} 查看解题步骤")
-
     res = ctfer.container.exec_run(["claude", "--dangerously-skip-permissions", "--print", task], workdir="/opt/claude_code")
+    ctfer.cleanup()
     print("[+] 结束运行")
     print(bytes.decode(res.output))

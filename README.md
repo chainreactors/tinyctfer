@@ -10,6 +10,8 @@ PPT：https://wiki.chainreactors.red/blog/2025/12/01/intent_is_all_you_need/
 
 演讲视频：https://www.bilibili.com/video/BV1z12eBkETz
 
+比赛详情以及其他队伍资料：https://zc.tencent.com/competition/competitionHackathon?code=cha004
+
 
 
 ## 使用方法
